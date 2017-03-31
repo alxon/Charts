@@ -216,6 +216,7 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
         let borderWidth = dataSet.barBorderWidth
         let borderColor = dataSet.barBorderColor
         let drawBorder = borderWidth > 0.0
+        let effect3d = dataSet.barBool3d
         
         context.saveGState()
         
@@ -305,6 +306,13 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 break
             }
             
+            if effect3d && barRect.size.height > 1 {
+                self.add3D(rect: barRect, context: context, color2: dataSet.color(atIndex: j))
+                if isSingleColor {
+                    context.setFillColor(dataSet.color(atIndex: 0).cgColor)
+                }
+            }
+
             if !isSingleColor
             {
                 // Set the color for the currently drawn value. If the index is out of bounds, reuse colors.
@@ -628,5 +636,57 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
     internal func setHighlightDrawPos(highlight high: Highlight, barRect: CGRect)
     {
         high.setDraw(x: barRect.midX, y: barRect.origin.y)
+    }
+    
+    ///
+    func add3D(rect: CGRect, context: CGContext, color2: UIColor) {
+        
+        let color = color2.withAlphaComponent(0.7).cgColor
+        
+        let angle = Double.pi / 4
+        
+        let multY = CGFloat(sin(angle))
+        let multX = CGFloat(cos(angle))
+        
+        let mult: CGFloat = 0.41
+        
+        var lineWidth = rect.width * mult
+        if lineWidth > 15 { lineWidth = 15 }
+        let lineHeight = rect.height
+        
+        let beginX = rect.origin.x
+        let beginY = rect.origin.y
+        
+        let secondDotX = beginX + lineWidth * multX
+        let secondDotY = beginY - lineWidth * multY
+        
+        let thirdDotX = secondDotX + rect.width
+        let thirdDotY = secondDotY
+        
+        let fourthDotX = thirdDotX
+        let fourthDotY = thirdDotY + lineHeight
+        
+        let fifthDotX = fourthDotX - lineWidth * multX
+        let fifthDotY = fourthDotY + lineWidth * multX
+        
+        let sixthDotX = beginX + rect.width
+        let sixthDotY = beginY
+        
+        context.beginPath()
+        context.move(to: CGPoint(x: beginX, y: beginY))
+        context.addLine(to: CGPoint(x: secondDotX, y: secondDotY))
+        context.addLine(to: CGPoint(x: thirdDotX, y: thirdDotY))
+        context.addLine(to: CGPoint(x: fourthDotX, y: fourthDotY))
+        context.addLine(to: CGPoint(x: fifthDotX, y: fifthDotY))
+        context.addLine(to: CGPoint(x: sixthDotX, y: sixthDotY))
+        context.closePath()
+        
+        context.setFillColor(color)
+        context.fillPath()
+        
+        context.move(to: CGPoint(x: thirdDotX, y: thirdDotY))
+        context.addLine(to: CGPoint(x: sixthDotX, y: sixthDotY))
+        color2.setStroke()
+        context.strokePath()
     }
 }

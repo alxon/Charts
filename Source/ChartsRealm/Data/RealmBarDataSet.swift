@@ -19,6 +19,9 @@ import Realm.Dynamic
 
 open class RealmBarDataSet: RealmBarLineScatterCandleBubbleDataSet, IBarChartDataSet
 {
+    ///
+    public var barBool3d = false
+
     open override func initialize()
     {
         self.highlightColor = NSUIColor.black
