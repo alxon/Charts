@@ -31,6 +31,7 @@ class BarChartTests: FBSnapshotTestCase
         
         let data = BarChartData(dataSet: dataSet)
         data.barWidth = 0.85
+        data.barBool3d = true
         
         chart = BarChartView(frame: CGRect(x: 0, y: 0, width: 480, height: 350))
         chart.backgroundColor = NSUIColor.clear
