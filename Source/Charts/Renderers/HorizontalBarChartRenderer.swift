@@ -328,7 +328,14 @@ open class HorizontalBarChartRenderer: BarChartRenderer
                 
                 let isInverted = dataProvider.isInverted(axis: dataSet.axisDependency)
                 
-                let valueFont = dataSet.valueFont
+                let maxSize = dataSet.valueFont.pointSize
+                let minSize = viewPortHandler.minimumValueLabelFontSize
+                let scaleY = viewPortHandler.scaleY
+                let size = minSize * scaleY
+                let normalizeSize = size > maxSize ? maxSize : size
+                
+                let valueFont = dataSet.valueFont.withSize(normalizeSize)
+
                 let yOffset = -valueFont.lineHeight / 2.0
                 
                 guard let formatter = dataSet.valueFormatter else { continue }
