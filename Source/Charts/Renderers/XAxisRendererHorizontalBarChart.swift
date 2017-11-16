@@ -127,7 +127,14 @@ open class XAxisRendererHorizontalBarChart: XAxisRenderer
             let viewPortHandler = self.viewPortHandler
             else { return }
         
-        let labelFont = xAxis.labelFont
+        let maxSize = xAxis.labelFont.pointSize
+        let minSize = viewPortHandler.minimumXAxisLabelFontSize
+        let scaleY = viewPortHandler.scaleY
+        let size = minSize * scaleY
+        let normalizeSize = size > maxSize ? maxSize : size
+        
+        let labelFont = xAxis.labelFont.withSize(normalizeSize)
+
         let labelTextColor = xAxis.labelTextColor
         let labelRotationAngleRadians = xAxis.labelRotationAngle * ChartUtils.Math.FDEG2RAD
         

@@ -55,6 +55,9 @@ open class ViewPortHandler: NSObject
     /// offset that allows the chart to be dragged over its bounds on the x-axis
     fileprivate var _transOffsetY = CGFloat(0.0)
     
+    open var minimumXAxisLabelFontSize = CGFloat(10.0)
+    open var minimumValueLabelFontSize = CGFloat(10.0)
+    
     public override init()
     {
     }
