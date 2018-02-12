@@ -38,8 +38,9 @@ open class ChartUtils
         let d = ceil(log10(number < 0.0 ? -number : number))
         let pw = 1 - Int(d)
         let magnitude = pow(Double(10.0), Double(pw))
+        let op = pow(Double(10.0), abs(Double(pw)))
         let shifted = round(number * magnitude)
-        return shifted / magnitude
+        return ((shifted / magnitude)*op).rounded()/op
     }
     
     internal class func decimals(_ number: Double) -> Int
